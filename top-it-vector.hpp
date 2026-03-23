@@ -32,11 +32,6 @@ void topit::Vector< T >::pushBack(const T&)
   
 }
 template< class T >
-bool topit::Vector< T >::isEmpty() const noexcept
-{
-  return !size_;
-}
-template< class T >
 topit::Vector< T >::~Vector()
 {
   delete [] data_;
@@ -47,4 +42,65 @@ topit::Vector< T >::Vector():
   size_(0),
   capacity_(0)
 {}
+template< class T >
+bool topit::Vector< T >::isEmpty() const noexcept
+{
+  return !size_;
+}
+template< class T >
+size_t topit::Vector< T >::getSize() const noexcept
+{
+  return size_;
+}
+template< class T >
+size_t topit::Vector< T >::getCapacity() const noexcept
+{
+  return capacity_;
+}
+template< class T >
+void topit::Vector< T >::pushBack(const T& v)
+{
+  if (size_ == capacity_)
+  {
+    T* newData = nullptr;
+    size_t i = 0;
+    try
+    {
+      newData = new T [capacity_ + 1];
+      for (; i < capacity_; ++i)
+      {
+        newData[i] = data_[i];
+      }
+      newData[i++] = v;
+    }
+    catch (...)
+    {
+      for (size_t j = 0; j < i; ++j)
+      {
+        newData[j].~T();
+      }
+      delete [] newData;
+      throw;
+    }
+    for (size_t j = 0; j < size_; ++j)
+    {
+      data_[j].~T();
+    }
+    delete [] data_;
+    data_ = newData;
+    ++size_;
+    ++capacity_;
+    return;
+  }
+  data_[size_] = v;
+  ++size_;
+}
+template< class T >
+void topit::Vector< T >::popBack()
+{
+  if (size_ > 0)
+  {
+    data_[--size_].~T();
+  }
+}
 #endif
