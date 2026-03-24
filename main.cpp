@@ -5,6 +5,7 @@
 bool testEmptyVector()
 {
   using namespace topit;
+  
   Vector< int > v;
   return v.isEmpty();
 }
@@ -26,4 +27,6 @@ int main()
     pass = pass && res;
   }
   std::cout << "RESULT: " << pass << "\n";
+  //Подсчет пройденных-непройденных
+  //Выводить только неудачные тесты
 }
