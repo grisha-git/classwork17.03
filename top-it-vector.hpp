@@ -11,7 +11,8 @@ namespace topit
     Vector(const Vector&);
     Vector(Vector&&) noexcept;
     Vector(size_t, const T&);
-    Vector< T >& opearator=(const Vector< T >&);
+    Vector(size_t);
+
     Vector< T >& operator=(Vector< T >&&);
     Vector< T >& operator=(const Vector< T >&);
 
@@ -27,7 +28,9 @@ namespace topit
     void pushBack(const T&);
     void popBack();
     void insert(size_t, const T&);
+    void insert(const Vector< T >&, size_t, size_t, size_t);
     void earse(size_t);
+    void erase(size_t, size_t);
 
     void swap(Vector< T >&) noexcept;
     void changeVectorInSomeWay();
@@ -41,6 +44,17 @@ namespace topit
   bool operator==(const Vector< T >& lhs, const Vector< T >& rhs);
 }
 
+template< class T >
+topit::Vector< T >::Vector():
+  data_(nullptr),
+  size_(0),
+  capacity_(0)
+{}
+template< class T >
+topit::Vector< T >::~Vector()
+{
+  delete [] data_;
+}
 template< class T >
 topit::Vector< T >::Vector(const Vector& rhs):
   Vector(rhs.getSize())
@@ -75,19 +89,6 @@ topit::Vector< T >::Vector(size_t size, const T& init):
 }
 
 template< class T >
-void topit::Vector< T >::changeVectorInSomeWay()
-{
-  Vector< T > cpy(*this);
-  swap(cpy);
-}
-template< class T >
-void topit::Vector< T >::swap(Vector< T >& rhs) noexcept
-{
-  std::swap(data_ rhs.data_);
-  std::swap(size_, rhs.size_);
-  std::swap(capacity_, rhs.capacity_);
-}
-template< class T >
 topit::Vector< T >& topit::Vector< T >::operator=(const Vector< T >& rhs)
 {
   Vector< T > cpy{rhs};
@@ -111,22 +112,6 @@ bool topit::operator==(const Vector< T >& lhs, const Vector< T >& rhs)
 }
 
 template< class T >
-void topit::Vector< T >::pushBack(const T&)
-{
-  
-}
-template< class T >
-topit::Vector< T >::~Vector()
-{
-  delete [] data_;
-}
-template< class T >
-topit::Vector< T >::Vector():
-  data_(nullptr),
-  size_(0),
-  capacity_(0)
-{}
-template< class T >
 bool topit::Vector< T >::isEmpty() const noexcept
 {
   return !size_;
@@ -141,6 +126,35 @@ size_t topit::Vector< T >::getCapacity() const noexcept
 {
   return capacity_;
 }
+
+template< class T >
+T& topit::Vector< T >::operator[](size_t id) noexcept
+{
+  const Vector< T >* cthis = this;
+  return const_cast< T& >((*cthis)[id]);
+}
+template< class T >
+const T& topit::Vector< T >::operator[](size_t id) const noexcept
+{
+  return data_[id];
+}
+
+template< class T >
+T& topit::Vector< T >::at(size_t id)
+{
+  const Vector< T >* cthis = this;
+  return const_cast< T& >(cthis->at(id));
+}
+template< class T >
+const T& topit::Vector< T >::at(size_t id) const
+{
+  if (id < getSize())
+  {
+    return this->operator[](id);
+  }
+  throw std::out_of_range("bad id");
+}
+
 template< class T >
 void topit::Vector< T >::pushBack(const T& v)
 {
@@ -179,7 +193,6 @@ void topit::Vector< T >::pushBack(const T& v)
   data_[size_] = v;
   ++size_;
 }
-
 template< class T >
 void topit::Vector< T >::popBack()
 {
@@ -190,30 +203,16 @@ void topit::Vector< T >::popBack()
 }
 
 template< class T >
-T& topit::Vector< T >::operator[](size_t id) noexcept
+void topit::Vector< T >::swap(Vector< T >& rhs) noexcept
 {
-  const Vector< T >* cthis = this;
-  return const_cast< T& >((*cthis)[id]);
+  std::swap(data_ rhs.data_);
+  std::swap(size_, rhs.size_);
+  std::swap(capacity_, rhs.capacity_);
 }
 template< class T >
-const T& topit::Vector< T >::operator[](size_t id) const noexcept
+void topit::Vector< T >::changeVectorInSomeWay()
 {
-  return data_[id];
-}
-
-template< class T >
-T& topit::Vector< T >::at(size_t id)
-{
-  const Vector< T >* cthis = this;
-  return const_cast< T& >(cthis->at(id));
-}
-template< class T >
-const T& topit::Vector< T >::at(size_t id) const
-{
-  if (id < getSize())
-  {
-    return this->operator[](id);
-  }
-  throw std::out_of_range("bad id");
+  Vector< T > cpy(*this);
+  swap(cpy);
 }
 #endif
