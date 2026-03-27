@@ -9,9 +9,11 @@ namespace topit
     Vector();
     ~Vector();
     Vector(const Vector&);
-    Vector(Vector&&);
+    Vector(Vector&&) noexcept;
+    Vector(size_t, const T&);
     Vector< T >& opearator=(const Vector< T >&);
     Vector< T >& operator=(Vector< T >&&);
+    Vector< T >& operator=(const Vector< T >&);
 
     bool isEmpty() const noexcept;
     size_t getSize() const noexcept;
@@ -26,18 +28,78 @@ namespace topit
     void popBack();
     void insert(size_t, const T&);
     void earse(size_t);
+
+    void swap(Vector< T >&) noexcept;
+    void changeVectorInSomeWay();
+
   private:
     T* data_;
     size_t size_, capacity_;
+    explicit Vector(size_t size);
   };
   template< class T >
   bool operator==(const Vector< T >& lhs, const Vector< T >& rhs);
 }
 
 template< class T >
-topit::Vector< T >::Vector(const Vector& rhs)
+topit::Vector< T >::Vector(const Vector& rhs):
+  Vector(rhs.getSize())
 {
+  for (size_t i = 0; i < rhs.getSize(); ++i)
+  {
+    data_[i] = rhs[i];
+  }
+}
+template< class T >
+topit::Vector< T >::Vector(Vector< T >&& rhs) noexcept:
+  data_(rhs.data_),
+  size_(rhs.size_),
+  capacity_(rhs.capacity_)
+{
+  rhs.data_ = nullptr;
+}
+template< class T >
+topit::Vector< T >::Vector(size_t size):
+  data_(size ? new T[size] : nullptr),
+  size_(size),
+  capacity_(size)
+{}
+template< class T >
+topit::Vector< T >::Vector(size_t size, const T& init):
+  Vector(size)
+{
+  for (size_t i = 0; i < size; ++i)
+  {
+    data_[i] = init;
+  }
+}
 
+template< class T >
+void topit::Vector< T >::changeVectorInSomeWay()
+{
+  Vector< T > cpy(*this);
+  swap(cpy);
+}
+template< class T >
+void topit::Vector< T >::swap(Vector< T >& rhs) noexcept
+{
+  std::swap(data_ rhs.data_);
+  std::swap(size_, rhs.size_);
+  std::swap(capacity_, rhs.capacity_);
+}
+template< class T >
+topit::Vector< T >& topit::Vector< T >::operator=(const Vector< T >& rhs)
+{
+  Vector< T > cpy{rhs};
+  swap(cpy);
+  return *this;
+}
+template< class T >
+topit::Vector< T >& topit::Vector< T >::operator=(Vector< T >&& rhs)
+{
+  Vector< T > cpy(std::move(rhs));
+  swap(cpy);
+  return *this;
 }
 
 template< class T >
