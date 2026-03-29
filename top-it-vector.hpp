@@ -1,6 +1,8 @@
 #ifndef TOP_IT_VECTOR_HPP
 #define TOP_IT_VECTOR_HPP
 #include <cstddef>
+#include <utility>
+#include <stdexcept>
 namespace topit
 {
   template< class T >
@@ -11,7 +13,6 @@ namespace topit
     Vector(const Vector&);
     Vector(Vector&&) noexcept;
     Vector(size_t, const T&);
-    Vector(size_t);
 
     Vector< T >& operator=(Vector< T >&&);
     Vector< T >& operator=(const Vector< T >&);
@@ -201,11 +202,51 @@ void topit::Vector< T >::popBack()
     data_[--size_].~T();
   }
 }
+template< class T >
+void topit::Vector< T >::insert(size_t id, const T& value)
+{
+  if (id > size_)
+  {
+    throw std::out_of_range("Too much");
+  }
+  Vector< T > cpy;
+  size_t newCapacity = size_ == capacity_ ? capacity_ + 1 : capacity_;
+  size_t i = 0;
+  T* newData = nullptr;
+  try
+  {
+    newData = new T[newCapacity];
+    for (; i < id; ++i)
+    {
+      newData[i] = data_[i];
+    }
+    newData[i] = value;
+    ++i;
+    for (; i < size_ + 1; ++i)
+    {
+      newData[i] = data_[i - 1];
+    }
+  }
+  catch (...)
+  {
+    delete [] newData;
+    throw;
+  }
+  cpy.capacity_ = newCapacity;
+  cpy.size_ = size_ + 1;
+  cpy.data_ = newData;
+  swap(cpy);
+}
+template< class T >
+void topit::Vector< T >::insert(const Vector< T >& toPaste, size_t start, size_t end, size_t id)
+{
+  
+}
 
 template< class T >
 void topit::Vector< T >::swap(Vector< T >& rhs) noexcept
 {
-  std::swap(data_ rhs.data_);
+  std::swap(data_, rhs.data_);
   std::swap(size_, rhs.size_);
   std::swap(capacity_, rhs.capacity_);
 }
