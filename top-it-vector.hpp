@@ -210,7 +210,7 @@ void topit::Vector< T >::insert(size_t id, const T& value)
     throw std::out_of_range("Too much");
   }
   Vector< T > cpy;
-  size_t newCapacity = size_ == capacity_ ? capacity_ + 1 : capacity_;
+  size_t newCapacity = size_ == capacity_ ? capacity_ * 2 : capacity_;
   size_t i = 0;
   T* newData = nullptr;
   try
@@ -240,7 +240,13 @@ void topit::Vector< T >::insert(size_t id, const T& value)
 template< class T >
 void topit::Vector< T >::insert(const Vector< T >& toPaste, size_t start, size_t end, size_t id)
 {
-  
+  Vector< T > cpy{*this};
+  for (; start < end; ++start)
+  {
+    cpy.insert(id, toPaste[start]);
+    ++id;
+  }
+  swap(cpy);
 }
 
 template< class T >
