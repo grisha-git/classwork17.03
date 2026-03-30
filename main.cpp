@@ -85,15 +85,37 @@ bool testCopyConstructorForNonEmpty()
   topit::Vector< int > v;
   v.pushBack(1);
   topit::Vector< int > yav = v;
-  try
-  {
-    return yav.getSize() == v.getSize() && yav.at(0) == v.at(0);
-  }
-  catch (...)
-  {
-    return false;
-  }
   return v == yav;
+}
+
+bool testCopyOperatorForEmpty()
+{
+  topit::Vector< int > vec1;
+  topit::Vector< int > vec2;
+  vec2 = vec1;
+  return vec1 == vec2;
+}
+bool testCopyOperatorForNonEmpty()
+{
+  topit::Vector< int > vec1;
+  vec1.pushBack(1);
+  topit::Vector< int > vec2;
+  vec2 = vec1;
+  return vec1 == vec2;
+}
+
+bool testPushBack()
+{
+  topit::Vector< int > vec;
+  vec.pushBack(1);
+  return (vec.getSize() == 1) && (vec[0] == 1);
+}
+bool tetsPopBack()
+{
+  topit::Vector< int > vec;
+  vec.pushBack(1);
+  vec.popBack();
+  return (vec.getSize() == 0);
 }
 
 int main()
@@ -107,7 +129,11 @@ int main()
     { "Inbound const accsess", testElementInBoundConstAccess},
     { "Out of bound const access", testElementOutOfBoundConstAccess},
     { "Copy empty vector", testCopyConstructorForEmpty},
-    { "copy non-empty vector", testCopyConstructorForNonEmpty}
+    { "Copy non-empty vector", testCopyConstructorForNonEmpty},
+    { "Copy-operator for empty vector", testCopyOperatorForEmpty},
+    { "Copy-operator for non-empty vector", testCopyOperatorForNonEmpty},
+    { "Push back testing", testPushBack},
+    { "Pop back testing", tetsPopBack}
   };
   const size_t count = sizeof(tests) / sizeof(test_t);
   std::cout << std::boolalpha;
