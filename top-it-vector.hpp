@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <utility>
 #include <stdexcept>
+#include <initializer_list>
 namespace topit
 {
   template< class T >
@@ -13,6 +14,8 @@ namespace topit
     Vector(const Vector&);
     Vector(Vector&&) noexcept;
     Vector(size_t, const T&);
+    explicit Vector(std::initializer_list< T >);
+
 
     Vector< T >& operator=(Vector< T >&&);
     Vector< T >& operator=(const Vector< T >&);
@@ -20,13 +23,16 @@ namespace topit
     bool isEmpty() const noexcept;
     size_t getSize() const noexcept;
     size_t getCapacity() const noexcept;
+    void reserve(size_t);
+    void shrinkToFit();
 
-    T& operator[](size_t id) noexcept;
-    const T& operator[](size_t id) const noexcept;
-    T& at(size_t id);
-    const T& at(size_t id) const;
+    T& operator[](size_t) noexcept;
+    const T& operator[](size_t) const noexcept;
+    T& at(size_t);
+    const T& at(size_t) const;
 
     void pushBack(const T&);
+    void pushBackCount(size_t, const T&);
     void popBack();
     void insert(size_t, const T&);
     void insert(const Vector< T >&, size_t, size_t, size_t);
@@ -40,6 +46,7 @@ namespace topit
     T* data_;
     size_t size_, capacity_;
     explicit Vector(size_t size);
+    void unsafePuchBack(const T&);
   };
   template< class T >
   bool operator==(const Vector< T >& lhs, const Vector< T >& rhs);
@@ -86,6 +93,16 @@ topit::Vector< T >::Vector(size_t size, const T& init):
   for (size_t i = 0; i < size; ++i)
   {
     data_[i] = init;
+  }
+}
+template< class T >
+topit::Vector< T >::Vector(std::initializer_list< T > il):
+  Vector(il.size())
+{
+  size_t i = 0;
+  for (auto it = il.begin(); it != il.end(); ++it)
+  {
+    data_[i++] = *it;
   }
 }
 
@@ -156,6 +173,7 @@ const T& topit::Vector< T >::at(size_t id) const
   throw std::out_of_range("bad id");
 }
 
+//unsafe push back
 template< class T >
 void topit::Vector< T >::pushBack(const T& v)
 {

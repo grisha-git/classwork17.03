@@ -118,6 +118,12 @@ bool tetsPopBack()
   return (vec.getSize() == 0);
 }
 
+bool testInitializerList()
+{
+  topit::Vector< int > v {1, 2};
+  return v.getSize() == 2 && (v[0] == 1) && (v[1] == 2);
+}
+
 int main()
 {
   using test_t = std::pair< const char*, bool(*)() >;
@@ -133,7 +139,8 @@ int main()
     { "Copy-operator for empty vector", testCopyOperatorForEmpty},
     { "Copy-operator for non-empty vector", testCopyOperatorForNonEmpty},
     { "Push back testing", testPushBack},
-    { "Pop back testing", tetsPopBack}
+    { "Pop back testing", tetsPopBack},
+    { "Initializer_list test", testInitializerList}
   };
   const size_t count = sizeof(tests) / sizeof(test_t);
   std::cout << std::boolalpha;
