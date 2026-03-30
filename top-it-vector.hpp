@@ -30,7 +30,7 @@ namespace topit
     void popBack();
     void insert(size_t, const T&);
     void insert(const Vector< T >&, size_t, size_t, size_t);
-    void earse(size_t);
+    void erase(size_t);
     void erase(size_t, size_t);
 
     void swap(Vector< T >&) noexcept;
@@ -248,6 +248,23 @@ void topit::Vector< T >::insert(const Vector< T >& toPaste, size_t start, size_t
   }
   swap(cpy);
 }
+template< class T >
+void topit::Vector< T >::erase(size_t id)
+{
+  if (id > size_)
+  {
+    throw std::out_of_range("Too much");
+  }
+  Vector< T > temp{*this};
+  temp.data_[id].~T();
+  for (size_t i = id; i < size_ - 1; ++i)
+  {
+    temp.data_[i] = std::move(temp.data_[i + 1]);
+  }
+  --temp.size_;
+  swap(temp);
+}
+
 
 template< class T >
 void topit::Vector< T >::swap(Vector< T >& rhs) noexcept
