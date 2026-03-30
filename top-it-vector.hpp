@@ -264,7 +264,16 @@ void topit::Vector< T >::erase(size_t id)
   --temp.size_;
   swap(temp);
 }
-
+template< class T >
+void topit::Vector< T >::erase(size_t start, size_t end)
+{
+  Vector< T > temp{*this};
+  for (size_t i = 0; i < (end - start); ++i)
+  {
+    temp.erase(start);
+  }
+  swap(temp);
+}
 
 template< class T >
 void topit::Vector< T >::swap(Vector< T >& rhs) noexcept
