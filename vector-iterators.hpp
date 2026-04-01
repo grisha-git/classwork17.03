@@ -35,6 +35,37 @@ namespace topit
   private:
     T* node;
   };
+
+  template< class T >
+  struct VCIter
+  {
+    VCIter() = default;
+    explicit VCIter(const T*);
+    
+    VCIter< T >& operator++() noexcept;
+    VCIter< T > operator++(int) noexcept;
+    VCIter< T >& operator+=(int) noexcept;
+    VCIter< T > operator+(int) noexcept;
+
+    VCIter< T >& operator--() noexcept;
+    VCIter< T > operator--(int) noexcept;
+    VCIter< T >& operator-=(int) noexcept;
+    VCIter< T > operator-(int) noexcept;
+
+    std::ptrdiff_t operator-(const VCIter< T >&) const noexcept;
+
+    const T& operator*() const noexcept;
+    const T* operator->() const noexcept;
+
+    bool operator==(const VCIter< T >&) const noexcept;
+    bool operator!=(const VCIter< T >&) const noexcept;
+    bool operator>(const VCIter< T >&) const noexcept;
+    bool operator>=(const VCIter< T >&) const noexcept;
+    bool operator<(const VCIter< T >&) const noexcept;
+    bool operator<=(const VCIter< T >&) const noexcept;
+  private:
+    const T* node;
+  };
 }
 
 template< class T >
@@ -140,6 +171,113 @@ bool topit::VIter< T >::operator<(const VIter< T >& yaIt) const noexcept
 }
 template< class T >
 bool topit::VIter< T >::operator<=(const VIter< T >& yaIt) const noexcept
+{
+  return node <= yaIt.node;
+}
+
+template< class T >
+topit::VCIter< T >::VCIter(const T* n):
+  node(n)
+{}
+
+template< class T >
+topit::VCIter< T >& topit::VCIter< T >::operator++() noexcept
+{
+  ++node;
+  return *this;
+}
+template< class T >
+topit::VCIter< T > topit::VCIter< T >::operator++(int) noexcept
+{
+  VCIter< T > tmp = *this;
+  ++node;
+  return tmp;
+}
+template< class T >
+topit::VCIter< T >& topit::VCIter< T >::operator+=(int count) noexcept
+{
+  node += count;
+  return *this;
+}
+template< class T >
+topit::VCIter< T > topit::VCIter< T >::operator+(int count) noexcept
+{
+  VCIter< T > tmp = *this;
+  tmp.node += count;
+  return tmp;
+}
+
+template< class T >
+topit::VCIter< T >& topit::VCIter< T >::operator--() noexcept
+{
+  --node;
+  return *this;
+}
+template< class T >
+topit::VCIter< T > topit::VCIter< T >::operator--(int) noexcept
+{
+  VCIter< T > tmp = *this;
+  --node;
+  return tmp;
+}
+template< class T >
+topit::VCIter< T >& topit::VCIter< T >::operator-=(int count) noexcept
+{
+  node -= count;
+  return *this;
+}
+template< class T >
+topit::VCIter< T > topit::VCIter< T >::operator-(int count) noexcept
+{
+  VCIter< T > tmp = *this;
+  tmp.node -= count;
+  return tmp;
+}
+
+template< class T >
+std::ptrdiff_t topit::VCIter< T >::operator-(const VCIter< T >& yaIt) const noexcept
+{
+  return node - yaIt.node;
+}
+
+template< class T >
+const T& topit::VCIter< T >::operator*() const noexcept
+{
+  return *node;
+}
+template< class T >
+const T* topit::VCIter< T >::operator->() const noexcept
+{
+  return node;
+}
+
+template< class T >
+bool topit::VCIter< T >::operator==(const VCIter< T >& yaIt) const noexcept
+{
+  return node == yaIt.node;
+}
+template< class T >
+bool topit::VCIter< T >::operator!=(const VCIter< T >& yaIt) const noexcept
+{
+  return node != yaIt.node;
+}
+template< class T >
+bool topit::VCIter< T >::operator>(const VCIter< T >& yaIt) const noexcept
+{
+  return node > yaIt.node;
+}
+template< class T >
+bool topit::VCIter< T >::operator>=(const VCIter< T >& yaIt) const noexcept
+{
+  return node >= yaIt.node;
+}
+template< class T >
+bool topit::VCIter< T >::operator<(const VCIter< T >& yaIt) const noexcept
+{
+  return node < yaIt.node;
+}
+template< class T >
+bool topit::VCIter< T >::operator<=(const VCIter< T >& yaIt) const noexcept
 {
   return node <= yaIt.node;
 }
