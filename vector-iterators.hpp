@@ -8,6 +8,7 @@ namespace topit
   template< class T >
   struct VIter
   {
+    VIter() = default;
     explicit VIter(T*);
     
     VIter< T >& operator++() noexcept;
@@ -27,6 +28,10 @@ namespace topit
 
     bool operator==(const VIter< T >&) const noexcept;
     bool operator!=(const VIter< T >&) const noexcept;
+    bool operator>(const VIter< T >&) const noexcept;
+    bool operator>=(const VIter< T >&) const noexcept;
+    bool operator<(const VIter< T >&) const noexcept;
+    bool operator<=(const VIter< T >&) const noexcept;
   private:
     T* node;
   };
@@ -117,6 +122,26 @@ template< class T >
 bool topit::VIter< T >::operator!=(const VIter< T >& yaIt) const noexcept
 {
   return node != yaIt.node;
+}
+template< class T >
+bool topit::VIter< T >::operator>(const VIter< T >& yaIt) const noexcept
+{
+  return node > yaIt.node;
+}
+template< class T >
+bool topit::VIter< T >::operator>=(const VIter< T >& yaIt) const noexcept
+{
+  return node >= yaIt.node;
+}
+template< class T >
+bool topit::VIter< T >::operator<(const VIter< T >& yaIt) const noexcept
+{
+  return node < yaIt.node;
+}
+template< class T >
+bool topit::VIter< T >::operator<=(const VIter< T >& yaIt) const noexcept
+{
+  return node <= yaIt.node;
 }
 
 #endif
