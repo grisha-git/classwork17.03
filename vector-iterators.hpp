@@ -8,13 +8,17 @@ namespace topit
   template< class T >
   struct VIter
   {
-    VIter();
-    VIter(const VIter&);
-    VIter(T*);
+    explicit VIter(T*);
     
     VIter< T >& operator++();
     VIter< T > operator++(int);
-    VIter< T > operator+=(int);
+    VIter< T >& operator+=(int);
+    VIter< T > operator+(int);
+
+    VIter< T >& operator--();
+    VIter< T > operator--(int);
+    VIter< T >& operator-=(int);
+    VIter< T > operator-(int);
 
     T& operator*() const noexcept;
     T* operator->() const noexcept;
@@ -25,4 +29,8 @@ namespace topit
     T* node;
   };
 }
+
+
+
+
 #endif
