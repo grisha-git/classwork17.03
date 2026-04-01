@@ -4,6 +4,7 @@
 #include <utility>
 #include <stdexcept>
 #include <initializer_list>
+#include "vector-iterators.hpp"
 namespace topit
 {
   template< class T >
@@ -16,6 +17,8 @@ namespace topit
     Vector(size_t, const T&);
     explicit Vector(std::initializer_list< T >);
 
+    VIter< T > begin() const noexcept;
+    VCIter< T > cbegin() const noexcept;
 
     Vector< T >& operator=(Vector< T >&&);
     Vector< T >& operator=(const Vector< T >&);
@@ -36,6 +39,9 @@ namespace topit
     void popBack();
     void insert(size_t, const T&);
     void insert(const Vector< T >&, size_t, size_t, size_t);
+    VIter< T > insert(const VIter< T >&, const T&);
+    VIter< T > insert(const VIter< T >&, const T&, size_t);
+    VIter< T > insert(const VIter< T >&, const VIter< T >&);
     void erase(size_t);
     void erase(size_t, size_t);
 
@@ -104,6 +110,19 @@ topit::Vector< T >::Vector(std::initializer_list< T > il):
   {
     data_[i++] = *it;
   }
+}
+
+template< class T >
+topit::VIter< T > topit::Vector< T >::begin() const noexcept
+{
+  VIter< T > tmp{data_};
+  return tmp;
+}
+template< class T >
+topit::VCIter< T > topit::Vector< T >::cbegin() const noexcept
+{
+  VCIter< T > tmp{data_};
+  return tmp;
 }
 
 template< class T >
@@ -266,6 +285,31 @@ void topit::Vector< T >::insert(const Vector< T >& toPaste, size_t start, size_t
   }
   swap(cpy);
 }
+template< class T >
+topit::VIter< T > topit::Vector< T >::insert(const VIter< T >& iterator, const T& value)
+{
+  size_t id = iterator - begin();
+  insert(id, value);
+  return VIter< T >{begin() + id};
+}
+template< class T >
+topit::VIter< T > topit::Vector< T >::insert(const VIter< T >& iterator, const T& value, size_t count)
+{
+  size_t id = iterator - begin();
+  for (size_t i = 0; i < count; ++i)
+  {
+    insert(id + i, value);
+  }
+  return VIter< T >{begin() + id};
+}
+template< class T >
+topit::VIter< T > topit::Vector< T >::insert(const VIter< T >& placeToInsert, const VIter< T >& valueFromIterator)
+{
+  size_t id = placeToInsert - begin();
+  insert(id, *valueFromIterator);
+  return VIter< T >{begin() + id};
+}
+
 template< class T >
 void topit::Vector< T >::erase(size_t id)
 {
