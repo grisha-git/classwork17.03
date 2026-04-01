@@ -37,13 +37,18 @@ namespace topit
     void pushBack(const T&);
     void pushBackCount(size_t, const T&);
     void popBack();
+
     void insert(size_t, const T&);
     void insert(const Vector< T >&, size_t, size_t, size_t);
     VIter< T > insert(const VIter< T >&, const T&);
     VIter< T > insert(const VIter< T >&, const T&, size_t);
     VIter< T > insert(const VIter< T >&, const VIter< T >&);
+
     void erase(size_t);
     void erase(size_t, size_t);
+    void erase(const VIter< T >&);
+    void erase(const VIter< T >&, size_t);
+    void erase(const VIter< T >&, const VIter< T >&);
 
     void swap(Vector< T >&) noexcept;
     void changeVectorInSomeWay();
@@ -192,7 +197,6 @@ const T& topit::Vector< T >::at(size_t id) const
   throw std::out_of_range("bad id");
 }
 
-//unsafe push back
 template< class T >
 void topit::Vector< T >::pushBack(const T& v)
 {
@@ -335,6 +339,31 @@ void topit::Vector< T >::erase(size_t start, size_t end)
     temp.erase(start);
   }
   swap(temp);
+}
+template< class T >
+void topit::Vector< T >::erase(const VIter< T >& iterator)
+{
+  size_t id = iterator - begin();
+  erase(id);
+}
+template< class T >
+void topit::Vector< T >::erase(const VIter< T >& iterator, size_t count)
+{
+  size_t id = iterator - begin();
+  for (size_t i = 0; i < count; ++i)
+  {
+    erase(id);
+  }
+}
+template< class T >
+void topit::Vector< T >::erase(const VIter< T >& start, const VIter< T >& end)
+{
+  size_t id = start - begin();
+  size_t count = end - start;
+  for (size_t i = 0; i < count; ++i)
+  {
+    erase(id);
+  }
 }
 
 template< class T >
