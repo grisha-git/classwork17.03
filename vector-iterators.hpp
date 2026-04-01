@@ -89,4 +89,26 @@ topit::VIter< T > topit::VIter< T >::operator-(int count) noexcept
   return tmp;
 }
 
+template< class T >
+T& topit::VIter< T >::operator*() const noexcept
+{
+  return *node;
+}
+template< class T >
+T* topit::VIter< T >::operator->() const noexcept
+{
+  return node;
+}
+
+template< class T >
+bool topit::VIter< T >::operator==(const VIter< T >& yaIt) const noexcept
+{
+  return node == yaIt.node;
+}
+template< class T >
+bool topit::VIter< T >::operator!=(const VIter< T >& yaIt) const noexcept
+{
+  return node != yaIt.node;
+}
+
 #endif
