@@ -10,15 +10,15 @@ namespace topit
   {
     explicit VIter(T*);
     
-    VIter< T >& operator++();
-    VIter< T > operator++(int);
-    VIter< T >& operator+=(int);
-    VIter< T > operator+(int);
+    VIter< T >& operator++() noexcept;
+    VIter< T > operator++(int) noexcept;
+    VIter< T >& operator+=(int) noexcept;
+    VIter< T > operator+(int) noexcept;
 
-    VIter< T >& operator--();
-    VIter< T > operator--(int);
-    VIter< T >& operator-=(int);
-    VIter< T > operator-(int);
+    VIter< T >& operator--() noexcept;
+    VIter< T > operator--(int) noexcept;
+    VIter< T >& operator-=(int) noexcept;
+    VIter< T > operator-(int) noexcept;
 
     T& operator*() const noexcept;
     T* operator->() const noexcept;
@@ -30,7 +30,63 @@ namespace topit
   };
 }
 
+template< class T >
+topit::VIter< T >::VIter(T* n):
+  node(n)
+{}
 
+template< class T >
+topit::VIter< T >& topit::VIter< T >::operator++() noexcept
+{
+  ++node;
+  return *this;
+}
+template< class T >
+topit::VIter< T > topit::VIter< T >::operator++(int) noexcept
+{
+  VIter< T > tmp = *this;
+  ++node;
+  return tmp;
+}
+template< class T >
+topit::VIter< T >& topit::VIter< T >::operator+=(int count) noexcept
+{
+  node += count;
+  return *this;
+}
+template< class T >
+topit::VIter< T > topit::VIter< T >::operator+(int count) noexcept
+{
+  VIter< T > tmp = *this;
+  tmp.node += count;
+  return tmp;
+}
 
+template< class T >
+topit::VIter< T >& topit::VIter< T >::operator--() noexcept
+{
+  --node;
+  return *this;
+}
+template< class T >
+topit::VIter< T > topit::VIter< T >::operator--(int) noexcept
+{
+  VIter< T > tmp = *this;
+  --node;
+  return tmp;
+}
+template< class T >
+topit::VIter< T >& topit::VIter< T >::operator-=(int count) noexcept
+{
+  node -= count;
+  return *this;
+}
+template< class T >
+topit::VIter< T > topit::VIter< T >::operator-(int count) noexcept
+{
+  VIter< T > tmp = *this;
+  tmp.node -= count;
+  return tmp;
+}
 
 #endif
