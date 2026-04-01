@@ -21,7 +21,7 @@ namespace topit
     VIter< T >& operator-=(int) noexcept;
     VIter< T > operator-(int) noexcept;
 
-    std::ptrdiff_t operator-(VIter< T >&) const noexcept;
+    std::ptrdiff_t operator-(const VIter< T >&) const noexcept;
 
     T& operator*() const noexcept;
     T* operator->() const noexcept;
@@ -97,7 +97,7 @@ topit::VIter< T > topit::VIter< T >::operator-(int count) noexcept
 }
 
 template< class T >
-std::ptrdiff_t topit::VIter< T >::operator-(VIter< T >& yaIt) const noexcept
+std::ptrdiff_t topit::VIter< T >::operator-(const VIter< T >& yaIt) const noexcept
 {
   return node - yaIt.node;
 }
