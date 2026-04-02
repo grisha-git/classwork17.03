@@ -124,6 +124,65 @@ bool testInitializerList()
   return v.getSize() == 2 && (v[0] == 1) && (v[1] == 2);
 }
 
+bool testIteratorBuilding()
+{
+  topit::Vector< int > v{1};
+  topit::VIter< int > iterator{v.begin()};
+  return *iterator == 1;
+}
+bool testConstIteratorBuilding()
+{
+  const topit::Vector< int > v{1};
+  topit::VCIter< int > iterator{v.cbegin()};
+  return *iterator == 1;
+}
+
+bool testInsertIteratorValue()
+{
+  topit::Vector< int > v{1};
+  topit::VIter< int > iterator{v.begin()};
+  iterator = v.insert(iterator, 2);
+  return (*iterator == 2 && *(++iterator) == 1);
+}
+bool testInsertIteratorValueCount()
+{
+  topit::Vector< int > v{1};
+  topit::VIter< int > iterator{v.begin()};
+  iterator = v.insert(iterator, 2, 2);
+  return (*iterator == 2 && *(iterator + 1) == 2 && *(iterator + 2) == 1);
+}
+bool testInsertTwoIterators()
+{
+  topit::Vector< int > v{1, 2};
+  topit::VIter< int > firstIterator{v.begin()};
+  topit::VIter< int > secondIterator = firstIterator + 1;
+  firstIterator = v.insert(firstIterator, secondIterator);
+  return (*firstIterator == 2 && *(firstIterator + 1) == 1 && *(firstIterator + 2) == 2);
+}
+
+bool testEraseIterator()
+{
+  topit::Vector< int > v{1};
+  topit::VIter< int > iterator{v.begin()};
+  v.erase(iterator);
+  return v.getSize() == 0;
+}
+bool testEraseIteratorCount()
+{
+  topit::Vector< int > v{1, 2};
+  topit::VIter< int > iterator{v.begin()};
+  v.erase(iterator, 2);
+  return v.getSize() == 0;
+}
+bool testEraseTwoIterators()
+{
+  topit::Vector< int > v{1, 2};
+  topit::VIter< int > firstIterator{v.begin()};
+  topit::VIter< int > secondIterator = firstIterator + 1;
+  v.erase(firstIterator, secondIterator);
+  return v.getSize() == 1;
+}
+
 int main()
 {
   using test_t = std::pair< const char*, bool(*)() >;
@@ -140,7 +199,15 @@ int main()
     { "Copy-operator for non-empty vector", testCopyOperatorForNonEmpty},
     { "Push back testing", testPushBack},
     { "Pop back testing", tetsPopBack},
-    { "Initializer_list test", testInitializerList}
+    { "Initializer_list test", testInitializerList},
+    { "Iterator building", testIteratorBuilding},
+    { "Const-iterator building", testConstIteratorBuilding},
+    { "Insert with iterator and value", testInsertIteratorValue},
+    { "Insert with iterator, value and count", testInsertIteratorValueCount},
+    { "Insert with two iterators", testInsertTwoIterators},
+    { "Erase with iterator", testEraseIterator},
+    { "Erase with iterator and count", testEraseIteratorCount},
+    { "Erase with two iterators", testEraseTwoIterators}
   };
   const size_t count = sizeof(tests) / sizeof(test_t);
   std::cout << std::boolalpha;
