@@ -168,6 +168,36 @@ size_t topit::Vector< T >::getCapacity() const noexcept
 {
   return capacity_;
 }
+template< class T >
+void topit::Vector< T >::reserve(size_t cap)
+{
+  if (cap < size_)
+  {
+    return;
+  }
+  topit::Vector< T > tmp;
+  tmp.capacity_ = cap;
+  tmp.size_ = size_;
+  size_t i = 0;
+  try
+  {
+    tmp.data_ = new T [cap];
+    for (; i < size_; ++i)
+    {
+      tmp.data_[i] = data_[i];
+    }
+  }
+  catch (...)
+  {
+    for (size_t j = 0; j < i; ++j)
+    {
+      tmp.data_[j].~T();
+    }
+    delete [] tmp.data_;
+    throw;
+  }
+  swap(tmp);
+}
 
 template< class T >
 T& topit::Vector< T >::operator[](size_t id) noexcept
